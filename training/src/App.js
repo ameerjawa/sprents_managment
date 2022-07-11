@@ -8,7 +8,7 @@ function App() {
   const [data, setData] = React.useState(null);
 
   React.useEffect(() => {
-    fetch("/api")
+    fetch("/add_tutorial")
       .then((res) => res.json())
       .then((data) => setData(data.message));
   }, []);
