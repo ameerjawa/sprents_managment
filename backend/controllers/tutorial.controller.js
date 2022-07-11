@@ -1,5 +1,7 @@
 'use strict';
 
+const { logger } = require("../../server");
+
 // dependencies
 
 // public
@@ -9,10 +11,9 @@ module.exports = {
 	// 'get': {
 	// 	'index': getIndex
 	// },
-	// 'post': {
-	// 	'cancel': postCancel,
-	// 	'update': postUpdate
-	// },
+	'post': {
+		'add': postAdd
+	},
 	// 'models': {
 	// 	'plans': modelsPlans
 	// },
@@ -23,6 +24,14 @@ module.exports = {
 	// 'checkDomainPlanStorageByteLimit': checkDomainPlanStorageByteLimit,
 
 	// 'getDomainPlanUsage': getDomainPlanUsage,
+	
 	// 'getPlanByDomainId': getPlanByDomainId,
 	// 'setupFreeDomainPlan': setupFreeDomainPlan
 };
+
+
+
+function postAdd(req, res, data){
+	logger.log("yes im adding this from server");
+	res.json({ message: "add hamodi user" });
+}
