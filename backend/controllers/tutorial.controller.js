@@ -32,5 +32,5 @@ module.exports = {
 
 
 function postAdd(req, res, data){
-	res.json({ message: "added tutrial" });
+	res.json({ message: "added ameer" });
 }

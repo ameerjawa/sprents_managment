@@ -7,6 +7,8 @@ const Sequelize = require("sequelize");
 const fs = require('fs-extra');
 const relations = require("../backend/relations");
 const routes = require("../utils/routes");
+const cors = require('cors');
+
 
 
 
@@ -239,7 +241,10 @@ function loadControllers(attr) {
 function initExpress(){
 	
 	// Have Node serve the files for our built React app
-	app.use(express.static(path.resolve(__dirname, '../client/build')));
+	if(!process.env.DEVELOPMENT) {
+		app.use(express.static(path.resolve(__dirname, '../client/build')));
+	}
+	app.use(cors());
 	
 	routes.routes(app);
 	app.listen(PORT, () => {

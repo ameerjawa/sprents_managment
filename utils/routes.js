@@ -12,15 +12,21 @@ function routes(app) {
     // app.get("/api", (req, res) => {
     //  res.json({ message: "Hello from server!" });
     // });
+    app.get('/', (req, res) => {
+        res.json({message:"hello from server"});
+    });
     
-    app.get("/add_tutorial", SC.tutorial.post.add);
+    app.get("/api/add_tutorial", SC.tutorial.post.add);
+    
+    
+    
+    app.post("/signup", SC.user.post.signup);
   
     // All other GET requests not handled before will return our React app
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
-    });
-
-	// app.get('/redirect/*', SC.guest.get.redirect);
-
-	// app.post('/weather/get_current', SC.weather.post.getCurrent);
+    if(!process.env.DEVELOPMENT) {
+        app.get('*', (req, res) => {
+            res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+        });     
+    }
+    
 }
