@@ -32,6 +32,5 @@ module.exports = {
 
 
 function postAdd(req, res, data){
-	logger.log("yes im adding this from server");
-	res.json({ message: "add hamodi user" });
+	res.json({ message: "added tutrial" });
 }
