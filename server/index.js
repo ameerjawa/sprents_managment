@@ -239,7 +239,7 @@ function loadControllers(attr) {
 function initExpress(){
 	
 	// Have Node serve the files for our built React app
-	app.use(express.static(path.resolve(__dirname, '../training/build')));
+	app.use(express.static(path.resolve(__dirname, '../client/build')));
 	
 	routes.routes(app);
 	app.listen(PORT, () => {
