@@ -11,6 +11,8 @@ function HomePage(props) {
     const emailInputForSignUp = useRef(null);
     const nameInputForSignUp = useRef(null);
     const paswordInputForSignUp = useRef(null);
+    const emailInputForLogin = useRef(null);
+    const passwordInputForLogin = useRef(null);
     
     
     
@@ -23,6 +25,7 @@ function HomePage(props) {
     }
     
     function signUpUser(e){
+        e.preventDefault();
         let userDetails = {};
         
         if(nameInputForSignUp.current.value){
@@ -38,27 +41,56 @@ function HomePage(props) {
             return showErrorMessage();
         }        
 
-        Axios.post('http://localhost:3001/signup', userDetails).then((res) => {
-
-            //handle your login 
-
-        }).catch((e) => {
-
-            //handle your errors
+        Axios.post('http://localhost:3001/signup', userDetails).then(onResponse).catch((e) => {
+            console.error(e);      //handle your errors
         });
         
         
         function onResponse(res){
+            // show message nice in the UI 
+            console.log(res.data.message);
             
+        }
+        
+        function showErrorMessage(){
+            // TODO need to be implemented
         }
     }
     
-    function showErrorMessage(){
-        // TODO need to be implemented
+    function login(e){
+        e.preventDefault();
+        let userDetails = {};
+        
+        if(emailInputForLogin.current.value){
+            userDetails.email = emailInputForLogin.current.value;
+        }   
+        if(passwordInputForLogin.current.value){
+            userDetails.password = passwordInputForLogin.current.value;
+        }
+        if(userDetails === {}){
+            return showErrorMessage();
+        }        
+
+        Axios.post('http://localhost:3001/login', userDetails).then(onResponse).catch((e) => {
+            console.error(e);      //handle your errors
+        });
+        
+        
+        function onResponse(res){
+            // show message nice in the UI 
+            console.log(res.data.message);
+            
+        }
+        
+        function showErrorMessage(){
+            // TODO need to be implemented
+        }
+        
+        
     }
     return (
         <div>
-                    <h2>Weekly Coding Challenge #1: Sign in/up Form</h2>
+        <h2>Weekly Coding Challenge #1: Sign in/up Form</h2>
         <div ref={container} className="container" id="container">
             <div className="form-container sign-up-container">
                 <form action="">
@@ -84,10 +116,10 @@ function HomePage(props) {
                         <a href="/" className="social"><i className="fab fa-linkedin-in"></i></a>
                     </div>
                     <span>or use your account</span>
-                    <input type="email" placeholder="Email" />
-                    <input type="password" placeholder="Password" />
+                    <input ref={emailInputForLogin} type="email" placeholder="Email" />
+                    <input ref={passwordInputForLogin} type="password" placeholder="Password" />
                     <a href="/">Forgot your password?</a>
-                    <button>Sign In</button>
+                    <button onClick={login}>Sign In</button>
                 </form>
             </div>
             <div className="overlay-container">

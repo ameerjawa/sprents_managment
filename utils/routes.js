@@ -21,6 +21,8 @@ function routes(app) {
     
     
     app.post("/signup", SC.user.post.signup);
+    
+    app.post("/login",SC.user.post.login);
   
     // All other GET requests not handled before will return our React app
     if(!process.env.DEVELOPMENT) {

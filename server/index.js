@@ -1,6 +1,7 @@
 // server/index.js
 const path = require('path');
 const express = require("express");
+var bodyParser = require('body-parser')
 require('dotenv').config();
 const dbConfig = require("../config/db.config.js");
 const Sequelize = require("sequelize");
@@ -9,6 +10,10 @@ const relations = require("../backend/relations");
 const routes = require("../utils/routes");
 const cors = require('cors');
 
+
+
+module.exports.postResponse = postResponse;
+module.exports.e500 = e500;
 
 
 
@@ -201,6 +206,7 @@ function loadModels(attr) {
 		function onCompleted() {
 			remaining--;
 			if(remaining <= 0) {
+				logger.log("asdasda",models);
 				module.exports.models = models;
 				resolve();
 			}
@@ -244,8 +250,13 @@ function initExpress(){
 	if(!process.env.DEVELOPMENT) {
 		app.use(express.static(path.resolve(__dirname, '../client/build')));
 	}
-	app.use(cors());
 	
+	app.use(cors());
+	// parse application/x-www-form-urlencoded
+	app.use(bodyParser.urlencoded({ extended: false }));
+
+	// parse application/json
+	app.use(bodyParser.json());
 	routes.routes(app);
 	app.listen(PORT, () => {
 		serverLoaded = true;
@@ -268,5 +279,90 @@ function internalCatch(callback) {
 			callback.apply(null, stream);
 		}
 	}
+}
+
+function postResponse(res, success, message, data) {
+	if(!success) {
+		res.status(403);
+	}
+	res.send({
+		'success': success,
+		'message': message,
+		'data': data
+	});
+
+}
+
+function errorCatch(callback) {
+	var stream = [];
+	for(var i = 1; i < arguments.length; i++) {
+		stream.push(arguments[i]);
+	}
+	
+	return catcher;
+	
+	function catcher(err) {
+		if(err && err.stack) {
+			if(
+				err.stack.indexOf('SequelizeConnectionRefusedError') !== -1 &&
+				err.stack.indexOf('ECONNREFUSED') !== -1
+			) {
+				logger.error('\x1b[41m' + 'ERROR' + '\x1b[0m: ' +
+					'ECONNREFUSED: Database connection unavailable');
+			}
+			else {
+				logger.error('\x1b[41m' + 'ERROR' + '\x1b[0m: ' + err.stack);
+				// + err.stack.replace(/ \((.*?)app(\\|\/)/g, ' (..'));
+			}
+		}
+		else {
+			logger.error('\x1b[41m' + 'ERROR' + '\x1b[0m: ', err);
+		}
+		
+		callback.apply(null, stream);
+	}
+}
+
+function errorPage(res, errorCode, { title, description } = {}) {
+	res.status(errorCode);
+
+	if(res.req.method !== 'GET') {
+		// express layouts module supports only GET ..
+		return res.send({
+			'success': false,
+			'message': title || null,
+			'data': {
+				'code': errorCode,
+				'description': description || null
+			}
+		});
+	}
+
+	if(title && description) {
+		res.send({title, description});
+	}
+	
+	res.send({title: "Error"});
+
+
+	// function onRender(err, html) {
+	// 	if(err) {
+	// 		return onError(err);
+	// 	}
+	// 	res.send(html);
+	// }
+
+	// function onError(err) {
+	// 	logger.error(err);
+	// 	res.render('error/customError', {
+	// 		'title': '(500) Internal Server Error',
+	// 		'description': `The server encountered an unexpected condition which prevented it from fulfilling the request. (code ${errorCode})`,
+	// 		'layout': 'error/errorLayout'
+	// 	});
+	// }
+}
+
+function e500(res) {
+	return errorCatch(errorPage, res, 500);
 }
 
