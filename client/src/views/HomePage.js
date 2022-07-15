@@ -1,8 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import "../css/HomePage.css";
 import Axios from 'axios';
 import {Animated} from "react-animated-css";
 import GLOBALS from '../globals'; // the variable name is arbitrary since it's exported as default
+
 
 
 
@@ -19,8 +20,7 @@ function HomePage(props) {
     const passwordInputForLogin = useRef(null);
     const [message, setMessage] = useState("");
     const [isMessageVisible, setIsMessageVisible] = useState(false);
-    
-    
+    const [user, setUser] = useState(null);
     
     
     function toggleSignInUi(){
@@ -98,8 +98,15 @@ function HomePage(props) {
         
         function onResponse(res){
             // show message nice in the UI 
-            setMessage(res.data.message);
-            showMessage();            
+            let responseData = res.data;
+            if(responseData.data.result) {
+                // TODO fix problem with navigating the user when loged in or signing up
+                setUser({userLogedIn: true, user_id: responseData.data.user_id});
+                localStorage.setItem('user', JSON.stringify({userLogedIn: true, user_id: responseData.data.user_id}));
+                return props.setUserSession({userLogedIn: true});
+            }
+            setMessage(responseData.message);
+            showMessage();
         }
         
         
@@ -110,7 +117,7 @@ function HomePage(props) {
         <h2>Weekly Coding Challenge #1: Sign in/up Form</h2>
         <div ref={container} className="container" id="container">
             <div className="form-container sign-up-container">
-                <form action="">
+                <form action="/">
                     <h1>Create Account</h1>
                     <div className="social-container">
                         <a href="/" className="social"><i className="fab fa-facebook-f"></i></a>

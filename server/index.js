@@ -24,6 +24,10 @@ global.BASE_DIR = path.dirname(__filename).slice(0,-7);
 // Setup - Logger
 const logger = require('../utils/logger');
 module.exports.logger = logger;
+module.exports.isEmptyObject = isEmptyObject;
+
+
+
 
 // Paths
 
@@ -160,6 +164,9 @@ function onDatabaseAuthFail(err){
 	process.exit(48);
 }
 
+function isEmptyObject(obj) {
+	return Object.keys(obj).length === 0;
+}
 
 function loadModels(attr) {
 	logger.log('loading models... (' + (new Date().getTime() - timeStart) + 'ms)');

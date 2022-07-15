@@ -14,14 +14,15 @@ function routes(app) {
     // });
     app.get('/', (req, res) => {
         res.json({message:"hello from server"});
-    });
+    });    
     
-    app.get("/api/add_tutorial", SC.tutorial.post.add);
+    app.get("/get_user_items", SC.item.get.getUserItems);
     
-    
+    app.post("/add_item", SC.item.post.add);
+    app.post("/remove_item", SC.item.post.removeItem);
+    app.post("/edit_item", SC.item.post.editItem);
     
     app.post("/signup", SC.user.post.signup);
-    
     app.post("/login",SC.user.post.login);
   
     // All other GET requests not handled before will return our React app

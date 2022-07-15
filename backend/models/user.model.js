@@ -89,6 +89,7 @@ function login(email, password){
             }
             return resolve({
                 'error': false,
+                'user': user,
                 'message': 'User Succesfully Logedin'
             })
         
