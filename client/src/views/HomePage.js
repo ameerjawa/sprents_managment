@@ -1,6 +1,10 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import "../css/HomePage.css";
 import Axios from 'axios';
+import {Animated} from "react-animated-css";
+import GLOBALS from '../globals'; // the variable name is arbitrary since it's exported as default
+
+
 
 
 
@@ -13,6 +17,9 @@ function HomePage(props) {
     const paswordInputForSignUp = useRef(null);
     const emailInputForLogin = useRef(null);
     const passwordInputForLogin = useRef(null);
+    const [message, setMessage] = useState("");
+    const [isMessageVisible, setIsMessageVisible] = useState(false);
+    
     
     
     
@@ -23,38 +30,48 @@ function HomePage(props) {
     function toggleSignUpUi(){
         container.current.classList.add("right-panel-active");
     }
+    function showMessage(){
+        setIsMessageVisible(true);
+        setTimeout(() => {
+            setIsMessageVisible(false);
+          }, "5000")
+        // TODO need to be implemented
+    }
     
     function signUpUser(e){
         e.preventDefault();
         let userDetails = {};
         
-        if(nameInputForSignUp.current.value){
+        if(nameInputForSignUp.current.value) {
             userDetails.name = nameInputForSignUp.current.value;
+        }else {
+            setMessage("name cant be empty");
+            return showMessage();
         }
-        if(emailInputForSignUp.current.value){
+        if(emailInputForSignUp.current.value) {
             userDetails.email = emailInputForSignUp.current.value;
+        }else {
+            setMessage("email cant be empty");
+            return showMessage();
         }   
-        if(paswordInputForSignUp.current.value){
+        if(paswordInputForSignUp.current.value) {
             userDetails.password = paswordInputForSignUp.current.value;
-        }
-        if(userDetails === {}){
-            return showErrorMessage();
-        }        
+        }else {
+            setMessage("password cant be empty");
+            return showMessage();
+        }   
 
-        Axios.post('http://localhost:3001/signup', userDetails).then(onResponse).catch((e) => {
+        return Axios.post(GLOBALS.API_HOST_URL+'/signup', userDetails).then(onResponse).catch((e) => {
             console.error(e);      //handle your errors
         });
         
         
         function onResponse(res){
             // show message nice in the UI 
-            console.log(res.data.message);
-            
+            setMessage(res.data.message);
+            return showMessage();            
         }
         
-        function showErrorMessage(){
-            // TODO need to be implemented
-        }
     }
     
     function login(e){
@@ -63,28 +80,28 @@ function HomePage(props) {
         
         if(emailInputForLogin.current.value){
             userDetails.email = emailInputForLogin.current.value;
-        }   
+        }else {
+            setMessage("email cant be empty");
+            return showMessage();
+        }     
         if(passwordInputForLogin.current.value){
             userDetails.password = passwordInputForLogin.current.value;
-        }
-        if(userDetails === {}){
-            return showErrorMessage();
-        }        
+        }else {
+            setMessage("password cant be empty");
+            return showMessage();
+        }    
 
-        Axios.post('http://localhost:3001/login', userDetails).then(onResponse).catch((e) => {
+        Axios.post(GLOBALS.API_HOST_URL + '/login', userDetails).then(onResponse).catch((e) => {
             console.error(e);      //handle your errors
         });
         
         
         function onResponse(res){
             // show message nice in the UI 
-            console.log(res.data.message);
-            
+            setMessage(res.data.message);
+            showMessage();            
         }
         
-        function showErrorMessage(){
-            // TODO need to be implemented
-        }
         
         
     }
@@ -136,6 +153,13 @@ function HomePage(props) {
                     </div>
                 </div>
             </div>
+        </div>
+        <div className="message">
+            <Animated animationIn="bounceInLeft" animationOut="fadeOut" isVisible={isMessageVisible}>
+            <div>
+                {message}
+            </div>
+             </Animated>
         </div>
 
         <footer>

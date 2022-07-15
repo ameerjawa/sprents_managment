@@ -226,6 +226,12 @@ input {
 	width: 40px;
 }
 
+.message{
+	margin-top: 1rem;
+	color: #FF416C;
+	font-size: 1.2rem;
+}
+
 footer {
     background-color: #222;
     color: #fff;

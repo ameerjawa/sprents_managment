@@ -79,7 +79,7 @@ function login(req, res, next){
 	
 	function onUserLoginSuccess(result){
 		if(result.error) {
-			return server.postResponse(res, true, result.message, parameters);
+			return server.postResponse(res, false, result.message, parameters);
 		}
 		return server.postResponse(res, true, 'User Loged In', parameters);
 
