@@ -79,7 +79,7 @@ function login(req, res, next){
 	
 	function onUserLoginRequestSuccess(result){
 		parameters["result"] = !result.error;
-		parameters["user_id"] = result?.user.id;
+		parameters["user_id"] = result?.user?.id;
 		return server.postResponse(res, true, result.message, parameters);			
 	}
 }
