@@ -16,6 +16,16 @@ function TodoList(props) {
         }
     })
     
+    function refreshSprints(){
+        Axios.get(GLOBALS.API_HOST_URL+'/get_user_items?id='+props?.user?.user_id).then(onResponse).catch((e) => {
+            console.error(e);      //handle your errors
+        });   
+        
+        function onResponse(response){
+            setTodos(response.data.data);
+        }
+    }
+    
 
     
     const addTodo = todo => {
@@ -31,7 +41,8 @@ function TodoList(props) {
         
         function onResponse(res){
             const newTodos = [todo, ...todos];
-            return setTodos(newTodos);                
+            setTodos(newTodos);
+            return refreshSprints();     
         }
   
     };
@@ -46,7 +57,7 @@ function TodoList(props) {
         });
         
         function onResponse(res){
-            setTodos(prev => prev.map(item => (item.id === todoId ? newValue : item)));
+            return refreshSprints();     
         }
     }
 
@@ -55,9 +66,9 @@ function TodoList(props) {
             console.error(e);      //handle your errors
         });
         function onResponse(response){
-            console.log("response   -- >> ",response);
-            const removeArr = [...todos].filter(todo => todo.id !== id);
-            return setTodos(removeArr);
+            // const removeArr = [...todos].filter(todo => todo.id !== id);
+            // setTodos(removeArr);
+            return refreshSprints();     
         }
 
     }

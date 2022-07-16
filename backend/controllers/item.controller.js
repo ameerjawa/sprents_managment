@@ -42,7 +42,6 @@ function postAdd(req, res, data){
 	}
 	text = parameters?.text;
 	user_id = parameters?.user_id;
-	console.log(text, user_id);
 	return server.models.item.addItem(text, user_id).then(onAddItemSuccess).catch(server.e500(res));
 	
 	
@@ -92,6 +91,7 @@ function removeItem(req, res, next){
 function editItem(req, res, next){
 	let parameters = req.body;
 	let newValue;
+	
 	
 	if(!parameters || server.isEmptyObject(parameters)) {
 		return res.send({message:"invalid request parameters"});

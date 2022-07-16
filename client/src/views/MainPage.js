@@ -14,27 +14,30 @@ function MainPage(props) {
     const container = useRef(null);
     const [user, setUser] = useState(null);
     const [items, setItems] = useState([]);
+    const [isDataFromDataBase, setIdDataFromDataBase] = useState(false);
 
     useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
-        console.log(user);
         setUser(user);
     }else {
         logout()
     }
     }, []);
-    
-    if(items.length === 0 && user?.user_id) {
+    useEffect(()=>{
+        if(items.length === 0 && !isDataFromDataBase && user?.user_id) {
             Axios.get(GLOBALS.API_HOST_URL+'/get_user_items?id='+user?.user_id).then(onResponse).catch((e) => {
                 console.error(e);      //handle your errors
             });   
-    }
+         }
+    })
+
 
     
     
     function onResponse(response){
         let itemsData = Object(response.data.data);
+        setIdDataFromDataBase(true);
         setItems(itemsData);
     }
     
@@ -47,9 +50,11 @@ function MainPage(props) {
 
     return (
         <div>
-        <h2>Weekly Coding Challenge #1: Sprints WorkSpace</h2>
-        <div ref={container} className="container" id="container">
-        <TodoList items={items} />
+        <h2>Weekly Coding Challenge #2: Sprints WorkSpace</h2>
+        <div className="containerParent">
+            <div ref={container} className="sprints_container" id="container">
+            <TodoList user={user}items={items} />
+            </div>
         </div>
         <button onClick={logout} className="logoutButton">
             logout

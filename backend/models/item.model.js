@@ -46,6 +46,7 @@ function getUserItems(user_id){
   }
 }
 function removeItem(item_id){
+
   return new Promise(removeOneItem);
   
   function removeOneItem(reslove, reject){
