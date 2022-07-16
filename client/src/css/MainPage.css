@@ -79,7 +79,14 @@ h2 {
     padding-bottom: 32px;
   }
   
+  
+  .sideBar{
+    height: 96.5vh;
+  }  
 
+  .mainWorkspace{
+    width: 100%;
+  }
   
   .complete {
     text-decoration: line-through;
@@ -87,8 +94,17 @@ h2 {
   }
   
   .todo-form {
-    margin-bottom: 32px;
-  }
+    margin-bottom: 12px;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: row;
+    padding: 0 50px;
+    height: 100%;
+    text-align: center;
+    margin-left: 1.8rem;
+  }  
   
   .todo-input {
     padding: 14px 32px 14px 16px;
@@ -98,6 +114,7 @@ h2 {
     width: 320px;
     background: black;
     color: #fff;
+    margin-right: 0.2rem;
   }
   
   .todo-input::placeholder {

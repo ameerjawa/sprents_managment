@@ -9,7 +9,7 @@ import {BrowserRouter, Routes ,Route, Navigate  } from 'react-router-dom';
 
 
 function App() {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem('userData'));
   const [userSession, setUserSession] = useState(user);
   useEffect(() => {
     if (user) {
@@ -19,6 +19,7 @@ function App() {
   
   return (
     <div className="App">
+      
       <BrowserRouter>
         <Routes>
            <Route path="*" element={ userSession?.userLogedIn ? <Navigate  to="/workspace"/> : <Navigate to="/homepage"/>} />

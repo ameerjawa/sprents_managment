@@ -101,8 +101,10 @@ function HomePage(props) {
             let responseData = res.data;
             if(responseData.data.result) {
                 // TODO fix problem with navigating the user when loged in or signing up
-                setUser({userLogedIn: true, user_id: responseData.data.user_id});
-                localStorage.setItem('user', JSON.stringify({userLogedIn: true, user_id: responseData.data.user_id}));
+                let user = responseData.data.user;
+                delete user.password;
+                setUser({userLogedIn: true, user: user});
+                localStorage.setItem('userData', JSON.stringify({userLogedIn: true, user: user}));
                 return props.setUserSession({userLogedIn: true});
             }
             setMessage(responseData.message);
@@ -115,7 +117,7 @@ function HomePage(props) {
     return (
         <div className="homepageApp">
         <div className="homepageContainer">
-        <h2>Weekly Coding Challenge #1: Sign in/up Form</h2>
+        <h2>Work Management</h2>
         <div className="containerParent">
         <div ref={container} className="container" id="container">
                 <div className="form-container sign-up-container">

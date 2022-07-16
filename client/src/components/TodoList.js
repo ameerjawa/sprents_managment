@@ -7,17 +7,17 @@ import GLOBALS from '../globals';
 // TODO need to style here and add functionality 
 
 function TodoList(props) {
-    const [todos, setTodos] = useState([]);
-
+    const [todos, setTodos] = useState(props.items); 
     
     useEffect(()=>{
-        if(todos.length === 0) {
+        if(!todos) {
             setTodos(props.items);
         }
     })
-    
+
     function refreshSprints(){
-        Axios.get(GLOBALS.API_HOST_URL+'/get_user_items?id='+props?.user?.user_id).then(onResponse).catch((e) => {
+        console.log("ameer is herer");
+        Axios.get(GLOBALS.API_HOST_URL+'/get_user_items?id='+props?.user?.id).then(onResponse).catch((e) => {
             console.error(e);      //handle your errors
         });   
         
@@ -32,7 +32,7 @@ function TodoList(props) {
         if(!todo.text || /^\s*$/.test(todo.text)) {
             return
         }
-        todo.user_id = JSON.parse(localStorage.getItem("user"))?.user_id;
+        todo.user_id = JSON.parse(localStorage.getItem("userData"))?.user?.id;
                 
         return Axios.post(GLOBALS.API_HOST_URL+'/add_item', todo).then(onResponse).catch((e) => {
             console.error(e);      //handle your errors
@@ -86,10 +86,10 @@ function TodoList(props) {
 
     return (
         <div>
-            <h1>What's the Plan for Today?</h1>
+            <h1>Weekly Sprents</h1>
             <TodoForm onSubmit={addTodo} />
             <div className='todosContainer'>
-            <Todo todos={todos} completeTodo={completeTodo} removeTodo={removeTodo} updateTodo={updateTodo} />
+            <Todo todos={todos ? todos: []} completeTodo={completeTodo} removeTodo={removeTodo} updateTodo={updateTodo} />
             </div>
         </div>
     )
