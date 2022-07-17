@@ -9,6 +9,10 @@ function model(sequelize, DataTypes) {
     },
     user_id: {
       type: DataTypes.INTEGER
+    },
+    project_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     }
   });
   Item.addItem = addItem;
@@ -21,7 +25,7 @@ function model(sequelize, DataTypes) {
 
 }
 
-function addItem(text, user_id){
+function addItem(text, user_id, project_id){
    
   return new Promise(createItemPromise);
   
@@ -29,6 +33,7 @@ function addItem(text, user_id){
         return server.models.item.create({
           'text': text,
           'user_id': user_id,
+          'project_id': project_id
       }).then(resolve).catch(reject); 
         
   }
@@ -41,7 +46,8 @@ function getUserItems(user_id){
     return server.models.item.findAll({
       where:{
         'user_id': user_id
-      }
+      },
+      order: [['updatedAt', 'DESC']]
   }).then(resolve).catch(reject); 
   }
 }

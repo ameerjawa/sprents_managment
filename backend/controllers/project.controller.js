@@ -7,14 +7,14 @@ const server = require("../../server");
 // public
 
 module.exports = {
-	'namespace': 'item',
+	'namespace': 'project',
 	'get': {
-		'getUserItems': getUserItems
+		'getUserProject': getUserProjects
 	},
 	'post': {
 		'add': postAdd,
-		'removeItem': removeItem,
-		'editItem': editItem
+		'removeItem': removeProject,
+		'editItem': editProject
 	},
 	// 'models': {
 	// 	'plans': modelsPlans
@@ -35,15 +35,14 @@ module.exports = {
 
 function postAdd(req, res, data){
 	let parameters = req.body;
-	let text, user_id, project_id;
+	let text, user_id;
 	
 	if(!parameters || server.isEmptyObject(parameters)) {
 		return res.send({message:"invalid request parameters"});
 	}
 	text = parameters?.text;
 	user_id = parameters?.user_id;
-	project_id = parameters.project_id;
-	return server.models.item.addItem(text, user_id, project_id).then(onAddItemSuccess).catch(server.e500(res));
+	return server.models.project.addproject(text, user_id).then(onAddItemSuccess).catch(server.e500(res));
 	
 	
 	function onAddItemSuccess(response){
@@ -52,11 +51,11 @@ function postAdd(req, res, data){
 	
 }
 
-function getUserItems(req, res, next){
+function getUserProjects(req, res, next){
 	let parameters = req.url;
 	let proxy = "http://" + process.env.HOST + ":" + process.env.PORT;
 	let params = (new URL(proxy + req.url)).searchParams;
-	let dataType = "item";
+    let dataType = "project";
 
 	let user_id = params.get("id");
 	
@@ -66,31 +65,31 @@ function getUserItems(req, res, next){
 	}
 	
 	
-	return server.models.item.getUserItems(user_id).then(onGetAllItemsSuccess).catch(server.e500(res))
+	return server.models.project.getUserprojects(user_id).then(onGetAllItemsSuccess).catch(server.e500(res))
 	
 	function onGetAllItemsSuccess(result){
 		return server.postResponse(res, true, 'all user items arrived', {result, dataType});
 	}
 }
 
-function removeItem(req, res, next){	
+function removeProject(req, res, next){	
 	let parameters = req.body;
-	let item_id;
+	let project_id;
 	
 	if(!parameters || server.isEmptyObject(parameters)) {
 		return res.send({message:"invalid request parameters"});
 	}
-	item_id = parameters.id;
+	project_id = parameters.id;
 	
-	return server.models.item.removeItem(item_id).then(onRemoveItemSuccess).catch(server.e500(res));
+	return server.models.project.removeproject(project_id).then(onRemoveProjectSuccess).catch(server.e500(res));
 	
-	function onRemoveItemSuccess(result){
-		return server.postResponse(res, true, 'item removed', result);
+	function onRemoveProjectSuccess(result){
+		return server.postResponse(res, true, 'project removed', result);
 	}
 	
 }
 
-function editItem(req, res, next){
+function editProject(req, res, next){
 	let parameters = req.body;
 	let newValue;
 	
@@ -99,9 +98,9 @@ function editItem(req, res, next){
 		return res.send({message:"invalid request parameters"});
 	}
 	newValue = parameters.newValue;
-	return server.models.item.editItem(newValue).then(onEditItemSuccess).catch(server.e500(res));
+	return server.models.project.editproject(newValue).then(onEditItemSuccess).catch(server.e500(res));
 	
 	function onEditItemSuccess(result){
-		return server.postResponse(res, true, 'item edited', result);
+		return server.postResponse(res, true, 'project edited', result);
 	}
 }

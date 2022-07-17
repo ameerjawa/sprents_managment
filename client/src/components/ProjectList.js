@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import TodoForm from './TodoForm';
-import Todo from './Todo';
 import Axios from 'axios';
 import GLOBALS from '../globals'; 
-import { RiContactsBookLine } from 'react-icons/ri';
+import ProjectForm from './ProjectForm';
+import Project from './Project';
 
 // TODO need to style here and add functionality 
 
-function TodoList(props) {
-    console.log("todo list function ",props);
+function ProjectList(props) {
     const [todos, setTodos] = useState(props.items); 
     
     useEffect(()=>{
@@ -18,19 +16,13 @@ function TodoList(props) {
     })
 
     function refreshSprints(){
-
-        Axios.get(GLOBALS.API_HOST_URL+'/get_user_items?id='+props?.user?.id).then(onResponse).catch((e) => {
+        Axios.get(GLOBALS.API_HOST_URL+'/get_user_projects?id='+props?.user?.id).then(onResponse).catch((e) => {
             console.error(e);      //handle your errors
         });   
         
-        
         function onResponse(response){
-            if(props.project) {
-                let newItems = [...response.data.data.result].filter(item => item.project_id === props.project.id);
-                setTodos(newItems);
-            }else{
-                setTodos(response.data.data.result);
-            }
+            setTodos(response.data.data.result);
+            props.renderProjectsPage();
         }
     }
     
@@ -41,9 +33,8 @@ function TodoList(props) {
             return
         }
         todo.user_id = JSON.parse(localStorage.getItem("userData"))?.user?.id;
-        todo.project_id = props.project ? props.project.id: null;
                 
-        return Axios.post(GLOBALS.API_HOST_URL+'/add_item', todo).then(onResponse).catch((e) => {
+        return Axios.post(GLOBALS.API_HOST_URL+'/add_project', todo).then(onResponse).catch((e) => {
             console.error(e);      //handle your errors
         });
         
@@ -61,7 +52,7 @@ function TodoList(props) {
             return;
         }
         newValue["id"] = todoId;
-        return Axios.post(GLOBALS.API_HOST_URL+'/edit_item', {newValue}).then(onResponse).catch((e) => {
+        return Axios.post(GLOBALS.API_HOST_URL+'/edit_project', {newValue}).then(onResponse).catch((e) => {
             console.error(e);      //handle your errors
         });
         
@@ -71,7 +62,7 @@ function TodoList(props) {
     }
 
     const removeTodo = id => {
-        return Axios.post(GLOBALS.API_HOST_URL+'/remove_item', {id}).then(onResponse).catch((e) => {
+        return Axios.post(GLOBALS.API_HOST_URL+'/remove_project', {id}).then(onResponse).catch((e) => {
             console.error(e);      //handle your errors
         });
         function onResponse(response){
@@ -95,13 +86,13 @@ function TodoList(props) {
 
     return (
         <div>
-            <h1>{props.project? props.project.text + " " : ""}Weekly Sprents</h1>
-            <TodoForm onSubmit={addTodo} />
+            <h1>User Projects</h1>
+            <ProjectForm onSubmit={addTodo} />
             <div className='todosContainer'>
-            <Todo todos={todos ? todos: []} completeTodo={completeTodo} removeTodo={removeTodo} updateTodo={updateTodo} />
+            <Project projects={todos ? todos: []} completeProject={completeTodo} removeProject={removeTodo} updateProject={updateTodo} />
             </div>
         </div>
     )
 }
 
-export default TodoList;
+export default ProjectList;

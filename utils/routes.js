@@ -22,6 +22,12 @@ function routes(app) {
     app.post("/remove_item", SC.item.post.removeItem);
     app.post("/edit_item", SC.item.post.editItem);
     
+    app.get("/get_user_projects", SC.project.get.getUserProject);
+    
+    app.post("/add_project", SC.project.post.add);
+    app.post("/remove_project", SC.project.post.removeItem);
+    app.post("/edit_project", SC.project.post.editItem);
+    
     app.post("/signup", SC.user.post.signup);
     app.post("/login",SC.user.post.login);
   
