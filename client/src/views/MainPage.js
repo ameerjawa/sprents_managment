@@ -6,7 +6,7 @@ import Axios from 'axios';
 import GLOBALS from '../globals'; 
 import { ProSidebar, Menu, MenuItem, SubMenu ,SidebarHeader, SidebarFooter, SidebarContent} from 'react-pro-sidebar';
 import 'react-pro-sidebar/dist/css/styles.css';
-import {FaGem, FaHeart} from 'react-icons/fa';
+import {FaCreativeCommonsPd, FaGem, FaHeart} from 'react-icons/fa';
 import { Link } from "react-router-dom";
 
 
@@ -85,20 +85,18 @@ function MainPage(props) {
     
     function renderProjectSprints(project){
          setProject(project);
+         console.log("items", items);
+        
          let newItems = [...items].filter(item => item.project_id === project.id);
          if(!isHomePage){
             setIsHomePage(true);
          }
-         console.log("from this fucntion ",newItems);
          setFilteredItems(newItems);
     }
 
 
     return (
         <div style={{display:"flex"}}>
-            {/* <ProSidebar>
-
-            </ProSidebar>; */}
             <div className="sideBar">
             <ProSidebar>
                 <SidebarHeader>
@@ -138,7 +136,7 @@ function MainPage(props) {
         <div className="mainWorkspace">  
         <div className="containerParent">
             <div ref={container} className="sprints_container" id="container">
-                {isHomePage ? <TodoList project={project} user={user} items={filteredItems}/> : <ProjectList renderProjectsPage={renderProjectsPage} user={user} items={projects} />}
+                {isHomePage ? <TodoList project={project} user={user} items={filteredItems} setItems={setItems}/> : <ProjectList renderProjectsPage={renderProjectsPage} user={user} items={projects} />}
             </div>
         </div>
 

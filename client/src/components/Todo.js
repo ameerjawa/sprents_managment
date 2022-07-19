@@ -20,7 +20,6 @@ function Todo({todos, completeTodo, removeTodo, updateTodo}) {
     if (edit.id) {
         return <TodoForm edit={edit} onSubmit={submitUpdate} />;
     }
-    console.log("todos closer ", todos);
     return todos.map((todo, index) => (
         <div className={todo.isComplete ? 'todo-row complete' :
         'todo-row'} key={index} >

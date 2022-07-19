@@ -3,18 +3,17 @@ import TodoForm from './TodoForm';
 import Todo from './Todo';
 import Axios from 'axios';
 import GLOBALS from '../globals'; 
-import { RiContactsBookLine } from 'react-icons/ri';
 
 // TODO need to style here and add functionality 
 
 function TodoList(props) {
-    console.log("todo list function ",props);
-    const [todos, setTodos] = useState(props.items); 
+    
+    const [todos, setTodos] = useState(null);
+    const [filteredTodos, setFilteredTodos] = useState(null);
     
     useEffect(()=>{
-        if(!todos) {
             setTodos(props.items);
-        }
+            setFilteredTodos(todos);
     })
 
     function refreshSprints(){
@@ -27,9 +26,11 @@ function TodoList(props) {
         function onResponse(response){
             if(props.project) {
                 let newItems = [...response.data.data.result].filter(item => item.project_id === props.project.id);
-                setTodos(newItems);
+                setFilteredTodos(newItems);
+                props.setItems(newItems);
             }else{
-                setTodos(response.data.data.result);
+                setFilteredTodos(response.data.data.result);
+                props.setItems(response.data.data.result);
             }
         }
     }
@@ -49,7 +50,7 @@ function TodoList(props) {
         
         
         function onResponse(res){
-            const newTodos = [todo, ...todos];
+            const newTodos = [todo, ...filteredTodos];
             setTodos(newTodos);
             return refreshSprints();     
         }
@@ -98,7 +99,7 @@ function TodoList(props) {
             <h1>{props.project? props.project.text + " " : ""}Weekly Sprents</h1>
             <TodoForm onSubmit={addTodo} />
             <div className='todosContainer'>
-            <Todo todos={todos ? todos: []} completeTodo={completeTodo} removeTodo={removeTodo} updateTodo={updateTodo} />
+            <Todo todos={filteredTodos ? filteredTodos: []} completeTodo={completeTodo} removeTodo={removeTodo} updateTodo={updateTodo} />
             </div>
         </div>
     )
