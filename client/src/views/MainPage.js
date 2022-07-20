@@ -8,9 +8,12 @@ import { ProSidebar, Menu, MenuItem, SubMenu ,SidebarHeader, SidebarFooter, Side
 import 'react-pro-sidebar/dist/css/styles.css';
 import {FaCreativeCommonsPd, FaGem, FaHeart} from 'react-icons/fa';
 import { Link } from "react-router-dom";
+import ProjectTodosList from "../components/ProjectTodosList";
 
 
-// TODO fix sprints rendering bug when click on specific project
+/**
+   @todo: fix when loging out the user session is keep there and then we can write workspace in the url to access the workspace (Security BUG).
+**/
 
 function MainPage(props) {
     
@@ -84,14 +87,23 @@ function MainPage(props) {
     }
     
     function renderProjectSprints(project){
-         setProject(project);
-         console.log("items", items);
+         
+         Axios.get(GLOBALS.API_HOST_URL+'/get_user_items?id='+user?.id).then(onResponse).catch((e) => {
+            console.error(e);      //handle your errors
+        });
         
-         let newItems = [...items].filter(item => item.project_id === project.id);
-         if(!isHomePage){
-            setIsHomePage(true);
-         }
-         setFilteredItems(newItems);
+        function onResponse(response){
+            setProject(project);
+            let newItems = [...response.data.data.result].filter(item => item.project_id === project.id);
+            console.log("items", newItems);
+   
+            if(!isHomePage){
+               setIsHomePage(true);
+            }
+            setFilteredItems(newItems);
+        }
+        
+
     }
 
 
@@ -136,10 +148,9 @@ function MainPage(props) {
         <div className="mainWorkspace">  
         <div className="containerParent">
             <div ref={container} className="sprints_container" id="container">
-                {isHomePage ? <TodoList project={project} user={user} items={filteredItems} setItems={setItems}/> : <ProjectList renderProjectsPage={renderProjectsPage} user={user} items={projects} />}
+                {isHomePage ? project ? <ProjectTodosList project={project} setItems={setItems} setFilteredItems={setFilteredItems} user={user} items={filteredItems}/>:<TodoList user={user} items={filteredItems}/> : <ProjectList renderProjectsPage={renderProjectsPage} user={user} items={projects} />}
             </div>
         </div>
-
 
         <footer>
             <p>

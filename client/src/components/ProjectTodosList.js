@@ -6,9 +6,14 @@ import GLOBALS from '../globals';
 
 // TODO need to style here and add functionality 
 
-function TodoList(props) {
+function ProjectTodosList(props) {
     
-    const [todos, setTodos] = useState(props.items);
+    const [projectTodos, setTodos] = useState(props.items);
+
+    
+    useEffect(()=>{
+        setTodos(props.items);
+    })
 
     function refreshSprints(){
 
@@ -16,10 +21,18 @@ function TodoList(props) {
             console.error(e);      //handle your errors
         });   
         
-        
         function onResponse(response){
-            setTodos(response.data.data.result);
-            
+            if(props.project) {
+                let newItems = [...response.data.data.result].filter(item => item.project_id === props.project.id);
+                setTodos(newItems);
+                props.setFilteredItems(newItems);
+                props.setItems(newItems);
+            }else{
+                setTodos([]);          
+                props.setFilteredItems([]);   
+                props.setItems([]);
+   
+            }
         }
     }
     
@@ -68,25 +81,25 @@ function TodoList(props) {
     }
 
     const completeTodo = id => {
-        let updatedTodos = todos.map(todo => {
+        let updatedTodos = projectTodos.map(todo => {
             if (todo.id === id) {
                 todo.isComplete = !todo.isComplete;
             }
             return todo;
         });
-        setTodos (updatedTodos);
+        setTodos(updatedTodos);
     }
 
 
     return (
         <div>
-            <h1>Weekly Sprents</h1>
+            <h1>{props.project? props.project.text + " " : ""}Weekly Sprents</h1>
             <TodoForm onSubmit={addTodo} />
             <div className='todosContainer'>
-            <Todo todos={todos ? todos: []} completeTodo={completeTodo} removeTodo={removeTodo} updateTodo={updateTodo} />
+            <Todo todos={projectTodos ? projectTodos: []} completeTodo={completeTodo} removeTodo={removeTodo} updateTodo={updateTodo} />
             </div>
         </div>
     )
 }
 
-export default TodoList;
+export default ProjectTodosList;
