@@ -177,9 +177,9 @@ function HomePage(props) {
         <footer>
             <p>
                 Created with <i className="fa fa-heart"></i> by
-                <a target="_blank" href="/">Ameer</a>
+                <a target="_blank" href="/"> Ameer </a>
                 - Read how I created this and how you can join the challenge
-                <a target="_blank" href="/">here</a>.
+                <a target="_blank" href="/"> here</a>.
             </p>
         </footer>
             

@@ -9,6 +9,7 @@ import 'react-pro-sidebar/dist/css/styles.css';
 import {FaCreativeCommonsPd, FaGem, FaHeart} from 'react-icons/fa';
 import { Link } from "react-router-dom";
 import ProjectTodosList from "../components/ProjectTodosList";
+import UserProfile from "../components/userDetailsUi/UserProfile";
 
 
 /**
@@ -25,7 +26,9 @@ function MainPage(props) {
     const [project, setProject] = useState(null);
     const [projects, setProjects] = useState(null);
     const [isHomePage, setIsHomePage] = useState(true);
+    const [isUserProfile, setIsUserProfile] = useState(false);
     const dataTypes = ["item", "project"];
+    console.log("dd",isHomePage);
 
     useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
@@ -57,6 +60,7 @@ function MainPage(props) {
         let itemsData = Object(dataResult.result);
         let dataType = dataResult.dataType;
         if(dataType === dataTypes[0]) {
+            console.log(itemsData);
             setItems(itemsData);
             setFilteredItems(itemsData);
             setIsHomePage(true);
@@ -71,7 +75,7 @@ function MainPage(props) {
     }
     
     function logout(){
-        localStorage.removeItem('user');
+        localStorage.removeItem('userData');
         props.setUserSession(null);
     }
     function renderHomePage(){ 
@@ -81,6 +85,7 @@ function MainPage(props) {
     }
     
     function renderProjectsPage(){
+        setIsUserProfile(false);
         Axios.get(GLOBALS.API_HOST_URL+'/get_user_projects?id='+user?.id).then(onResponse).catch((e) => {
             console.error(e);      //handle your errors
         }); 
@@ -105,6 +110,14 @@ function MainPage(props) {
         
 
     }
+    
+    function renderUserProfile(){
+        
+        console.log("test");
+        setIsHomePage(false);
+        setIsUserProfile(true);
+        
+    }
 
 
     return (
@@ -120,7 +133,7 @@ function MainPage(props) {
                        <MenuItem key={index} onClick={() => renderProjectSprints(project)}>{index + 1 + ". " + project.text}</MenuItem>
                     ))}
                     </SubMenu>
-                    <MenuItem icon={<FaGem />}>{user?.name + "'s"} Profile</MenuItem>
+                    <MenuItem onClick={() => renderUserProfile()} icon={<FaGem />}>{user?.name + "'s"} Profile</MenuItem>
                     </Menu>
                     {/**
                      *  You can add a header for the sidebar ex: logo
@@ -148,16 +161,33 @@ function MainPage(props) {
         <div className="mainWorkspace">  
         <div className="containerParent">
             <div ref={container} className="sprints_container" id="container">
-                {isHomePage ? project ? <ProjectTodosList project={project} setItems={setItems} setFilteredItems={setFilteredItems} user={user} items={filteredItems}/>:<TodoList user={user} items={filteredItems}/> : <ProjectList renderProjectsPage={renderProjectsPage} user={user} items={projects} />}
+                
+                {
+                    
+                isHomePage
+                ?
+                project 
+                
+                ?
+                 
+                <ProjectTodosList project={project} setItems={setItems} setFilteredItems={setFilteredItems} user={user} items={filteredItems}/>
+                :
+                <TodoList user={user} items={filteredItems}/>
+                : 
+                
+                isUserProfile ? <UserProfile  user={user} /> :
+                <ProjectList renderProjectsPage={renderProjectsPage} user={user} items={projects} />
+                
+                }
             </div>
         </div>
 
         <footer>
             <p>
                 Created with <i className="fa fa-heart"></i> by
-                <a target="_blank" href="/">Ameer</a>
+                <a target="_blank" href="/"> Ameer </a>
                 - Read how I created this and how you can join the challenge
-                <a target="_blank" href="/">here</a>.
+                <a target="_blank" href="/"> here</a>.
             </p>
         </footer>
         

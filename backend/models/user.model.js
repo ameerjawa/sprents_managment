@@ -18,6 +18,7 @@ function model(sequelize, DataTypes) {
   
   User.register = register;
   User.login = login;
+  User.editDetails = editDetails;
   
   return User;
 
@@ -93,6 +94,47 @@ function login(email, password){
                 'message': 'User Succesfully Logedin'
             })
         
+        }
+    }
+}
+
+function editDetails(id, name, email, password){
+    
+    console.log(name, email , password);
+        
+    return new Promise(editUserDetailsPromise);
+    
+    function editUserDetailsPromise(resolve, reject) {
+        return server.models.user.findOne({
+            'where': {
+                'id': id
+            }
+        })
+            .then(onUserFound)
+            .catch(reject);
+
+        function onUserFound(user) {
+            if(!user) {
+                return resolve({
+                    'error': true,
+                    'message': 'User Not Found', //'failed to create domain, name collision',
+                    'statusCode': 400
+                });
+            }
+            return server.models.user.update({
+                where:{
+                    id:id
+                },
+                name: name ? name: user.name,
+                email: email ? email : user.email,
+                password: password ? password: user.password
+            }).then(onUserDetailsUpdated)
+            .catch(reject);
+            
+            function onUserDetailsUpdated(user){
+                console.log(user);
+                
+            }
         }
     }
 }

@@ -13,7 +13,8 @@ module.exports = {
 	// },
 	'post': {
 		'signup': signUp,
-		'login': login
+		'login': login,
+		'editDetails': editDetails
 	},
 
 
@@ -88,4 +89,33 @@ function isEmptyObject(obj) {
 	return Object.keys(obj).length === 0;
 }
 
+
+function editDetails(req, res, next){
+	let parameters = req.body;
+	let id, name, email, password;
+	
+	if(!parameters || server.isEmptyObject(parameters)) {
+		return res.send({message:"invalid request parameters"});
+	}
+	
+	id = parameters?.user_id;
+	name = parameters?.name;
+	email = parameters?.email;
+	password = parameters?.password;
+	
+	return server.models.user.editDetails(id, name, email, password).then(onEditUserDetailsRequestSuccess).catch(server.e500(res));
+	
+	
+
+	// implement signing up and adding new user to the database
+	
+	
+	function onEditUserDetailsRequestSuccess(result){
+		parameters["result"] = !result.error;
+		parameters["user"] = result?.user;
+		return server.postResponse(res, true, result.message, parameters);			
+	}
+	
+	
+}
 

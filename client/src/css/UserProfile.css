@@ -1,0 +1,36 @@
+
+
+.userProfileContainerParent{
+    height: 100%;
+}
+
+.title {
+    margin-top: 1rem;
+
+}
+
+.formContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    align-items: stretch;
+    min-height: 93%;
+    margin-top: 5rem;
+}
+
+.nameInput, .emailInput, .passwordInput{
+    width: 60%;
+    margin-bottom: 3rem;
+    margin-left: 1rem;
+}
+
+.formContainer label {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 1rem;
+}
+.formContainer button{
+    width: 20%;
+    margin-top: 12rem;
+    margin-left: 20rem;
+}
