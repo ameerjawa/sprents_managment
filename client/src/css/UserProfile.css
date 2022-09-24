@@ -31,6 +31,13 @@
 }
 .formContainer button{
     width: 20%;
-    margin-top: 12rem;
-    margin-left: 20rem;
+    height: 3rem;
+    margin-bottom: 4rem;
+    margin-right: 5rem;
+}
+.submitButtonContainer{
+    min-height: 30vh;
+    justify-content: end;
+    display: flex;
+    align-items: end;
 }

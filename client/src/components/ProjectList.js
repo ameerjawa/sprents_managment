@@ -21,7 +21,8 @@ function ProjectList(props) {
         });   
         
         function onResponse(response){
-            setTodos(response.data.data.result);
+            let newItems = response.data.data.result;
+            setTodos(newItems);
             props.renderProjectsPage();
         }
     }

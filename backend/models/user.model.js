@@ -100,7 +100,7 @@ function login(email, password){
 
 function editDetails(id, name, email, password){
     
-    console.log(name, email , password);
+    console.log(id,name, email , password);
         
     return new Promise(editUserDetailsPromise);
     
@@ -121,19 +121,38 @@ function editDetails(id, name, email, password){
                     'statusCode': 400
                 });
             }
-            return server.models.user.update({
-                where:{
-                    id:id
-                },
+            var values = { 
                 name: name ? name: user.name,
                 email: email ? email : user.email,
                 password: password ? password: user.password
-            }).then(onUserDetailsUpdated)
+            };
+            var selector = { 
+                where: {
+                    id
+                }
+            };
+            return server.models.user.update(values, selector).then(onUserDetailsUpdated)
             .catch(reject);
             
-            function onUserDetailsUpdated(user){
-                console.log(user);
-                
+            function onUserDetailsUpdated(user_id){
+                return server.models.user.findOne({
+                    'where': {
+                        'id': user_id
+                    }
+                })
+                    .then(onUserFound)
+                    .catch(reject);
+                    
+                function onUserFound(user){
+                    console.log("user is -> ",user);
+                    return resolve({
+                        'error': false,
+                        'message': 'details was updated', //'failed to create domain, name collision',
+                        'statusCode': 200,
+                        'user': user
+                    });  
+                }    
+                         
             }
         }
     }

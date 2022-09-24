@@ -6,10 +6,14 @@ import Axios from 'axios';
 import GLOBALS from '../globals'; 
 import { ProSidebar, Menu, MenuItem, SubMenu ,SidebarHeader, SidebarFooter, SidebarContent} from 'react-pro-sidebar';
 import 'react-pro-sidebar/dist/css/styles.css';
-import {FaCreativeCommonsPd, FaGem, FaHeart} from 'react-icons/fa';
+import {FiLogOut} from 'react-icons/fi';
+import {CgProfile} from 'react-icons/cg';
+import {GrProjects} from 'react-icons/gr';
+import {AiFillHome} from 'react-icons/ai';
 import { Link } from "react-router-dom";
 import ProjectTodosList from "../components/ProjectTodosList";
 import UserProfile from "../components/userDetailsUi/UserProfile";
+
 
 
 /**
@@ -126,14 +130,14 @@ function MainPage(props) {
             <ProSidebar>
                 <SidebarHeader>
                     <Menu iconShape="square">
-                    <MenuItem onClick={renderHomePage} icon={<FaGem />}>HomePage</MenuItem>
-                    <SubMenu title="Projects" icon={<FaHeart />}>
+                    <MenuItem onClick={renderHomePage} icon={<AiFillHome />}>HomePage</MenuItem>
+                    <SubMenu title="Projects" icon={<GrProjects color='white' />}>
                     <MenuItem onClick={renderProjectsPage}>All Projects</MenuItem>
                     {projects?.map((project, index) => (
                        <MenuItem key={index} onClick={() => renderProjectSprints(project)}>{index + 1 + ". " + project.text}</MenuItem>
                     ))}
                     </SubMenu>
-                    <MenuItem onClick={() => renderUserProfile()} icon={<FaGem />}>{user?.name + "'s"} Profile</MenuItem>
+                    <MenuItem onClick={() => renderUserProfile()} icon={<CgProfile />}>{user?.name + "'s"} Profile</MenuItem>
                     </Menu>
                     {/**
                      *  You can add a header for the sidebar ex: logo
@@ -148,7 +152,7 @@ function MainPage(props) {
                 </SidebarContent>
                 <SidebarFooter>
                 <Menu iconShape="square">
-                    <MenuItem onClick={logout} icon={<FaGem />}>logout
+                    <MenuItem onClick={logout} icon={<FiLogOut />}>logout
                         <Link to="/"/>
                     </MenuItem>
                     </Menu>
@@ -175,8 +179,8 @@ function MainPage(props) {
                 <TodoList user={user} items={filteredItems}/>
                 : 
                 
-                isUserProfile ? <UserProfile  user={user} /> :
-                <ProjectList renderProjectsPage={renderProjectsPage} user={user} items={projects} />
+                isUserProfile ? <UserProfile setUser={setUser} user={user} /> :
+                <ProjectList setItems={setItems} setFilteredItems={setFilteredItems} renderProjectsPage={renderProjectsPage} user={user} items={projects} />
                 
                 }
             </div>

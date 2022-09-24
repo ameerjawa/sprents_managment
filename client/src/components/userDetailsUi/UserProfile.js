@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState, useRef } from 'react';
+import React, {  useState, useRef } from 'react';
 import '../../css/UserProfile.css';
 import {Animated} from "react-animated-css";
 import GLOBALS from '../../globals'; // the variable name is arbitrary since it's exported as default
@@ -12,6 +12,7 @@ function UserProfile(props){
     const emailInputForEditing = useRef(null);
     const nameInputForEditing = useRef(null);
     const paswordInputForEditing = useRef(null);
+    const [user, setUser] = useState(props.user);
     const [message, setMessage] = useState("");
     const [isMessageVisible, setIsMessageVisible] = useState(false);
     
@@ -48,11 +49,19 @@ function UserProfile(props){
         } else{
             setMessage("nothing has been changed");
             return showMessage();
-            
         }
     }
     
     function onResponse(response){
+        let user = response.data.data.user;
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        userData.user = user;
+        localStorage.setItem('userData', JSON.stringify(userData));
+        props.setUser(user);
+        setUser(user);
+        paswordInputForEditing.current.value = "";
+        nameInputForEditing.current.value = "";
+        emailInputForEditing.current.value = "";
         setMessage(response.data.message);
         return showMessage();   
     }
@@ -62,12 +71,14 @@ function UserProfile(props){
         <h1 className='title'>User Profile</h1>
         <div className='formContainer'>
             <label htmlFor="name">Edit your name</label>
-            <input ref={nameInputForEditing} name="name" className='nameInput' placeholder={props.user.name} />
+            <input ref={nameInputForEditing} name="name" className='nameInput' placeholder={user.name} />
             <label htmlFor="email">Edit your email</label>
-            <input ref={emailInputForEditing} name="email" className='emailInput' placeholder={props.user.email}/>
+            <input ref={emailInputForEditing} name="email" className='emailInput' placeholder={user.email}/>
             <label htmlFor="password">Edit your password</label>
             <input ref={paswordInputForEditing} name="password" className='passwordInput' placeholder='password'/>
+            <div className='submitButtonContainer'>
             <button onClick={handleEditUserDetails}>Submit</button>
+            </div>
             <div className="message">
             <Animated animationIn="bounceInLeft" animationOut="fadeOut" isVisible={isMessageVisible}>
             <div>
